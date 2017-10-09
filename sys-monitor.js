@@ -29,9 +29,9 @@ const getInfo = function (callback) {
 
     speedfan.poll(false, (error, results) => {
         if (error) {
-            if (!isError && typeof callback === "function") callback(error);
+            //if (!isError && typeof callback === "function") callback(error);
             isError = true;
-            return;
+            results = {temps:[],fans:[],volts:[]};
         }
         out.temps = results.temps;
         out.fans = results.fans;
@@ -41,9 +41,9 @@ const getInfo = function (callback) {
 
     disks.getAll((error, results) => {
         if (error) {
-            if (!isError && typeof callback === "function") callback(error);
+            //if (!isError && typeof callback === "function") callback(error);
             isError = true;
-            return;
+            results = {disks:[]};
         }
         out.disks = results;
         returnIfDone(out, callback);
