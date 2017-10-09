@@ -1,0 +1,173 @@
+﻿<!DOCTYPE html>
+
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="utf-8" />
+    <link rel="stylesheet" href="http://test-realm.ricegnat.com/styling/modern/modern.css" />
+    <title></title>
+    <style>
+        html, body {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            display: flex;
+            flex-direction: row;
+        }
+
+        .column {
+            width: 200px;
+            height: 100%;
+            flex: 1;
+            background: #d0d0d0;
+            border-style: solid;
+            border-color: #bbbbbb;
+            border-width: 0 1px 0 0;
+        }
+
+        .stack {
+            padding-bottom: 4px;
+        }
+
+        .card {
+            padding: 5px 5px;
+            background: #ffffff;
+        }
+
+            .card .label {
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
+                -webkit-user-select: none;
+                user-select: none;
+            }
+
+            .card .value {
+                text-align: right;
+                white-space: nowrap;
+                -webkit-user-select: none;
+                user-select: none;
+            }
+
+        .flexbox {
+            display: flex;
+            flex-direction: row;
+            width: 100%;
+        }
+
+            .flexbox > * {
+                flex: 1;
+            }
+
+        .value.left {
+            text-align: left;
+        }
+    </style>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script>
+        var endpoint = "http://localhost:8080/sys"
+        var data;
+
+        var units = ["", "K", "M", "G", "T"]
+
+        function ShowData() {
+            var stack;
+
+            stack = $("#template .stack").clone();
+            data.cpu.forEach(function (element, index) {
+                var name = element.name.replace(/\(R\)/g, "");
+                var clock = element.clock;
+                var prefix = 2;
+
+                while (clock >= 1000) {
+                    clock /= 1000;
+                    prefix++;
+                }
+
+                var card = $("#template .card.cpu").clone().prop("id", "cpu-" + index);
+                $(".label", card).text(name).prop("title", name);
+                $(".flexbox .left.value", card).text(clock + " " + units[prefix] + "Hz");
+                $(".flexbox .right.value", card).text(element.usage + "%");
+                stack.append(card);
+            });
+            $("#test").append(stack);
+
+            stack = $("#template .stack").clone();
+            {
+                var free = data.memory.free;
+                var total = data.memory.total;
+                var prefix = 0;
+                while (total >= 1000) {
+                    total /= 1024;
+                    free /= 1024;
+                    prefix++;
+                }
+
+                var card = $("#template .card.memory").clone().prop("id", "mem");
+                $(".flexbox .left.value", card).text(free.toPrecision(3) + "/" + total.toPrecision(3) + " " + units[prefix] + "B");
+                $(".flexbox .right.value", card).text(Math.trunc(free / total * 100) + "%");
+                stack.append(card);
+            }
+            $("#test").append(stack);
+
+            stack = $("#template .stack").clone();
+            data.disks.forEach(function (element, index) {
+                var free = element.freeSpace;
+                var total = element.size;
+                var prefix = 0;
+                while (total >= 1000) {
+                    total /= 1024;
+                    free /= 1024;
+                    prefix++;
+                }
+
+                var card = $("#template .card.disk").clone().prop("id", "disk-" + index);
+                $(".label", card).html(element.name + "&ensp;" + element.volumeName).prop("title", element.volumeName);
+                $(".flexbox .left.value", card).text(free.toPrecision(3) + "/" + total.toPrecision(3) + " " + units[prefix] + "B");
+                $(".flexbox .right.value", card).text(Math.trunc(free / total * 100) + "%");
+                stack.append(card);
+            });
+            $("#test").append(stack);
+
+        }
+
+        $(function () {
+            $.get(endpoint, function (results) {
+                data = results;
+                ShowData();
+            });
+        });
+    </script>
+</head>
+<body class="modern">
+    <div id="template" class="column">
+        <div class="card cpu">
+            <div class="label">Intel Core i7-4930K</div>
+            <div class="flexbox">
+                <h5 class="left value">3.4 GHz</h5>
+                <h5 class="right value">100%</h5>
+            </div>
+        </div>
+        <div class="card memory">
+            <div class="label">Memory</div>
+            <div class="flexbox">
+                <h5 class="left value">14/32 GB</h5>
+                <h5 class="right value">44%</h5>
+            </div>
+        </div>
+        <div class="card disk">
+            <div class="label">E:&ensp;Local Disk</div>
+            <div class="flexbox">
+                <h5 class="left value">192/232 GB</h5>
+                <h5 class="right value">83%</h5>
+            </div>
+        </div>
+        <div class="card temperature">
+            <div class="label">Core 0</div>
+            <h5 class="value">51 °C</h5>
+        </div>
+        <div class="stack"></div>
+    </div>
+    <div id="test" class="column">
+    </div>
+</body>
+</html>
