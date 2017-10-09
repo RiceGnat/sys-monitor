@@ -11,13 +11,15 @@ const server = http.createServer((req, res) => {
         sys.getInfo((error, results) => {
             if (error) {
                 res.writeHead(500);
+                console.log(error);
                 res.end(error);
             }
             else {
-                res.writeHead(200, { "Content-Type": "text/json" });
-                res.end(JSON.stringify(results));
-            }
-        });
+            res.writeHead(200, { "Content-Type": "text/json",
+                "Access-Control-Allow-Origin": "*"});
+                    res.end(JSON.stringify(results));
+                }
+            });
     }
     else {
         res.writeHead(404);
