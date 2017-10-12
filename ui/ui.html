@@ -1,0 +1,177 @@
+﻿<!DOCTYPE html>
+
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="utf-8" />
+    <link rel="stylesheet" href="http://test-realm.ricegnat.com/styling/modern/modern.css" />
+    <link rel="stylesheet" href="http://test-realm.ricegnat.com/styling/modern/dark.css" />
+    <title></title>
+    <style>
+        html, body {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            display: flex;
+            flex-direction: row;
+        }
+
+        /*** Sidebar styling ***/
+        #sidebar {
+            flex: 0 0 50px;
+            display: flex;
+            flex-direction: row;
+        }
+
+        ul.nav {
+            margin: 0;
+            padding: 0;
+            list-style: none;
+        }
+
+        .nav {
+            flex: 0 0 50px;
+        }
+
+        .nav-item {
+            position: relative;
+            height: 50px;
+            vertical-align: middle;
+        }
+
+        .nav-icon {
+            width: 100%;
+            height: 100%;
+            font-size: 200%;
+            text-align: center;
+            line-height: 50px;
+        }
+
+        .nav-item .flyout {
+            position: absolute;
+            top: 0;
+            left: 50px;
+            bottom: 0;
+            width: 0;
+            font-size: 150%;
+            line-height: 50px;
+            white-space: nowrap;
+            overflow: hidden;
+            transition: width linear 200ms;
+        }
+
+        .nav-item:hover .flyout {
+            width: 200px;
+        }
+
+        .side-panel {
+            flex: 1;
+            width: 600px;
+            transition: width linear 200ms;
+        }
+
+        .side-panel.collapsed {
+            width: 0;
+        }
+
+        /*** Columns area styling ***/
+        #main {
+            flex: 1;
+        }
+
+        .column {
+            width: 200px;
+            height: 100%;
+            flex: 1;
+            background: #d0d0d0;
+            border-style: solid;
+            border-color: #bbbbbb;
+            border-width: 0 1px 0 0;
+        }
+
+        .stack {
+            padding-bottom: 4px;
+        }
+
+        .card {
+            padding: 5px 5px;
+            background: #ffffff;
+        }
+
+            .card .label {
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
+                -webkit-user-select: none;
+                user-select: none;
+            }
+
+            .card .value {
+                font-size: 150%;
+                font-weight: 300;
+                text-align: right;
+                white-space: nowrap;
+                -webkit-user-select: none;
+                user-select: none;
+            }
+
+            .card.sub {
+                padding-top: 0;
+            }
+
+                .card.sub .label {
+                    display: none;
+                }
+
+        .flexbox {
+            display: flex;
+            flex-direction: row;
+            width: 100%;
+        }
+
+            .flexbox > * {
+                flex: 1;
+            }
+
+        .value.left {
+            text-align: left;
+        }
+    </style>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script src="client.js"></script>
+    <script>
+        var $sidebar;
+        var client
+
+        $(function () {
+            $sidebar = $("#sidebar");
+            $sidebar.openPanel = function () {
+                console.log(this);
+                $(".side-panel", this).removeClass("collapsed");
+            }
+            $sidebar.closePanel = function () {
+                $(".side-panel", this).addClass("collapsed");
+            }
+
+            client = new SysMonClient($("body"));
+
+            client.start();
+        });
+    </script>
+</head>
+<body class="modern">
+    <div id="sidebar" class="dark">
+        <ul class="nav">
+            <li class="nav-item">
+                <a href="javascript:void(0)">
+                    <div class="nav-icon">&#x2756;</div>
+                    <div class="flyout dark">Configure sources</div>
+                </a>
+            </li>
+        </ul>
+        <div class="side-panel collapsed">
+
+        </div>
+    </div>
+    <div id="main" class="column-container"></div>
+</body>
+</html>

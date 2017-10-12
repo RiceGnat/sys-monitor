@@ -1,0 +1,14 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<page>
+  <column title="">
+    <stack mergeMatchingCpus="true">
+      <card id="cpu-0" />
+      <row>
+        <card id="temps-0" />
+        <card id="temps-1" />
+      </row>
+    </stack>
+  </column>
+  <column>
+  </column>
+</page>
