@@ -22,10 +22,10 @@ const getInfo = function (callback) {
         returnIfDone(out, callback);
     });
 
-    out.memory = {
+    out.memory = [{
         free: os.freemem(),
         total: os.totalmem()
-    };
+    }];
 
     speedfan.poll(false, (error, results) => {
         if (error) {
