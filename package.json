@@ -9,6 +9,6 @@
     "url": "https://github.com/RiceGnat/sys-monitor"
   },
   "dependencies": {
-    "speedfan": "github:RiceGnat/speedfan-interface"
+    "sensor": "github:RiceGnat/node-sensors"
   }
 }

@@ -1,5 +1,5 @@
 const os = require("os");
-const speedfan = require("speedfan");
+const speedfan = require("sensor");
 const cpu = require("./cpu-usage.js");
 const disks = require("./disks.js");
 
@@ -27,7 +27,7 @@ const getInfo = function (callback) {
         total: os.totalmem()
     }];
 
-    speedfan.poll(false, (error, results) => {
+    speedfan.pollSpeedFan(false, (error, results) => {
         if (error) {
             //if (!isError && typeof callback === "function") callback(error);
             isError = true;
