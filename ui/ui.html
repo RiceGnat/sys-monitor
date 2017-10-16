@@ -20,6 +20,7 @@
             flex: 0 0 50px;
             display: flex;
             flex-direction: row;
+            align-items: flex-start;
         }
 
         ul.nav {
@@ -29,14 +30,27 @@
         }
 
         .nav {
-            flex: 0 0 50px;
+            width: 50px;
+            overflow: hidden;
+            transition: width linear 200ms;
         }
 
+
+            #sidebar:not(.collapsed) .nav,
+            .nav:hover {
+                width: 251px;
+            }
+
         .nav-item {
+            width: 50px;
             position: relative;
             height: 50px;
             vertical-align: middle;
         }
+
+            .nav-item .contents {
+                display: none;
+            }
 
         .nav-icon {
             width: 100%;
@@ -46,35 +60,42 @@
             line-height: 50px;
         }
 
+        .flyout {
+            font-size: 150%;
+            line-height: 50px;
+            white-space: nowrap;
+        }
+
         .nav-item .flyout {
             position: absolute;
             top: 0;
             left: 50px;
             bottom: 0;
-            width: 0;
-            font-size: 150%;
-            line-height: 50px;
-            white-space: nowrap;
-            overflow: hidden;
-            transition: width linear 200ms;
+            width: 200px;
         }
 
-        .nav-item:hover .flyout {
-            width: 200px;
+        .modern .dark .nav-item.open a {
+            color: #ffffff;
         }
 
         .side-panel {
             flex: 1;
-            width: 600px;
+            width: 402px;
+            padding: 20px 0;
             transition: width linear 200ms;
         }
 
-        .side-panel.collapsed {
+            .side-panel .contents {
+                white-space: nowrap;
+            }
+
+        #sidebar.collapsed .side-panel {
             width: 0;
         }
 
         /*** Columns area styling ***/
         #main {
+            display: flex;
             flex: 1;
         }
 
@@ -140,36 +161,72 @@
     <script src="client.js"></script>
     <script>
         var $sidebar;
-        var client
+        var client;
 
         $(function () {
             $sidebar = $("#sidebar");
             $sidebar.openPanel = function () {
-                console.log(this);
-                $(".side-panel", this).removeClass("collapsed");
+                $sidebar.removeClass("collapsed");
             }
             $sidebar.closePanel = function () {
-                $(".side-panel", this).addClass("collapsed");
+                $(".nav-item").removeClass("open");
+                $sidebar.addClass("collapsed");
+                $(".side-panel").empty();
             }
 
-            client = new SysMonClient($("body"));
+            $(".nav a").on("click", function () {
+                var $item = $(this).parent();
+                if ($item.hasClass("open")) {
+                    $sidebar.closePanel();
+                }
+                else {
+                    $(".nav-item").removeClass("open");
+                    $(".side-panel").empty();
 
+                    $(this).parent().find(".contents").clone().appendTo(".side-panel");
+
+                    $item.addClass("open");
+                    $sidebar.openPanel();
+                }
+                /*
+                if ($("#sidebar .side-panel").hasClass("collapsed")) {
+                    $(".flyout", this).clone().appendTo(".side-panel");
+                    $(this).parent().find(".contents").clone().appendTo(".side-panel");
+                }
+                else {
+                    $(".side-panel").empty();
+                }
+                */
+                $(this).blur();
+            });
+
+            client = new SysMonClient($("body"));
+            client.sources.push({ name: "source1", url: "http://localhost:8080/sys" });
+            client.sources.push({ name: "source2", url: "http://localhost:8080/sys" });
             client.start();
         });
     </script>
 </head>
 <body class="modern">
-    <div id="sidebar" class="dark">
+    <div id="sidebar" class="dark collapsed">
         <ul class="nav">
-            <li class="nav-item">
+            <li id="confSources" class="nav-item">
                 <a href="javascript:void(0)">
                     <div class="nav-icon">&#x2756;</div>
-                    <div class="flyout dark">Configure sources</div>
+                    <div class="flyout">Configure sources</div>
+                </a>
+                <div class="contents">
+                    <input type="text" /><input type="text" class="dark" />
+                </div>
+            </li>
+            <li id="settings" class="nav-item">
+                <a href="javascript:void(0)">
+                    <div class="nav-icon">&#x2756;</div>
+                    <div class="flyout">Settings</div>
                 </a>
             </li>
         </ul>
-        <div class="side-panel collapsed">
-
+        <div class="side-panel">
         </div>
     </div>
     <div id="main" class="column-container"></div>

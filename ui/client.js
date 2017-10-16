@@ -2,9 +2,13 @@ function SysMonClient($page) {
     var data;
     var xml;
     var timeout;
+    var self = this;
 
-    var endpoint = "http://localhost:8080/sys";
     var units = ["", "K", "M", "G", "T"];
+
+    this.sources = [];
+    this.data = [];
+    this.pollInterval = 1000;
 
     function generateId(property, index) {
         return property + "-" + index;
@@ -27,25 +31,31 @@ function SysMonClient($page) {
         var stack;
 
         xml = $.parseXML("<page/>");
-        var column = xml.createElement("column");
-        xml.documentElement.appendChild(column);
 
-        Object.keys(data).forEach(function (property) {
-            var stack;
-            if (data[property].length > 0) {
-                stack = xml.createElement("stack");
-                column.appendChild(stack);
-                data[property].forEach(function (element, index) {
-                    var card = xml.createElement("card");
-                    card.setAttribute("id", generateId(property, index));
-                    stack.appendChild(card);
-                });
-            }
+        data.forEach(function (source) {
+            var column = xml.createElement("column");
+            xml.documentElement.appendChild(column);
+            column.setAttribute("label", source.name);
+
+            Object.keys(source.sensors).forEach(function (property) {
+                var stack;
+                if (source.sensors[property].length > 0) {
+                    stack = xml.createElement("stack");
+                    column.appendChild(stack);
+
+                    // TODO: create special card for cpu
+
+                    source.sensors[property].forEach(function (element, index) {
+                        var card = xml.createElement("card");
+                        card.setAttribute("id", generateId(property, index));
+                        stack.appendChild(card);
+                    });
+                }
+            });
         });
     }
 
     function buildLayout() {
-        //$("#main").empty();
         $("column", xml).each(function (index) {
             var $column = $("<div>", { "class": "column" }).appendTo($(".column-container", $page));
             $("stack", this).each(function (index) {
@@ -58,10 +68,14 @@ function SysMonClient($page) {
     }
 
     function bindData() {
-        Object.keys(data).forEach(function (property) {
-            data[property].forEach(function (element, index) {
-                $(".card#" + generateId(property, index), $page).data(element);
-                // TODO: add xml node if new data item is found
+        data.forEach(function (source) {
+            Object.keys(source.sensors).forEach(function (property) {
+                // TODO: bind whole cpu stack to card
+
+                source.sensors[property].forEach(function (element, index) {
+                    $(".card#" + generateId(property, index), $page).data(element);
+                    // TODO: add xml node if new data item is found
+                });
             });
         });
     }
@@ -74,6 +88,8 @@ function SysMonClient($page) {
 
             switch (type) {
                 case "cpu":
+                    // TODO: draw collapsible cpu card
+
                     var name = item.name.replace(/\(R\)/g, "");
                     var clock = item.clock;
 
@@ -128,22 +144,38 @@ function SysMonClient($page) {
         });
     }
 
-    function poll() {
-        $.get(endpoint, function (results) {
-            data = results;
+    function pollSources(srcIndex) {
+        if (self.sources.length == 0) {
+            timeout = setTimeout(poll, self.pollInterval);
+            return;
+        }
+        $.get(self.sources[srcIndex].url, function (results) {
+            data.push({
+                name: self.sources[srcIndex].name,
+                sensors: results
+            });
 
-            if (!xml) {
-                generateInitialXML();
-                buildLayout();
-                console.log();
+            if (srcIndex < self.sources.length - 1) {
+                pollSources(srcIndex + 1);
             }
+            else {
+                if (!xml) {
+                    generateInitialXML();
+                    buildLayout();
+                }
 
-            bindData();
-            updateAll();
+                bindData();
+                updateAll();
 
-            this.data = data;
-            timeout = setTimeout(poll, 1000);
+                self.data = data;
+                timeout = setTimeout(poll, self.pollInterval);
+            }
         });
+    }
+
+    function poll() {
+        data = [];
+        pollSources(0);
     }
 
     this.start = function () {
@@ -162,6 +194,4 @@ function SysMonClient($page) {
     this.getLayout = function () {
         new XMLSerializer().serializeToString(xml);
     }
-
-    this.endpoints = [];
 }
