@@ -60,18 +60,15 @@
             line-height: 50px;
         }
 
-        .flyout {
-            font-size: 150%;
-            line-height: 50px;
-            white-space: nowrap;
-        }
-
-        .nav-item .flyout {
+        .nav-item .label {
             position: absolute;
             top: 0;
             left: 50px;
             bottom: 0;
             width: 200px;
+            font-size: 150%;
+            line-height: 50px;
+            white-space: nowrap;
         }
 
         .modern .dark .nav-item.open a {
@@ -159,11 +156,14 @@
     </style>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
     <script src="client.js"></script>
+    <script src="view.js"></script>
     <script>
         var $sidebar;
         var client;
+        var view;
 
         $(function () {
+            // Sidebar setup
             $sidebar = $("#sidebar");
             $sidebar.openPanel = function () {
                 $sidebar.removeClass("collapsed");
@@ -183,27 +183,29 @@
                     $(".nav-item").removeClass("open");
                     $(".side-panel").empty();
 
-                    $(this).parent().find(".contents").clone().appendTo(".side-panel");
+                    // TODO: construct menu here
 
                     $item.addClass("open");
                     $sidebar.openPanel();
                 }
-                /*
-                if ($("#sidebar .side-panel").hasClass("collapsed")) {
-                    $(".flyout", this).clone().appendTo(".side-panel");
-                    $(this).parent().find(".contents").clone().appendTo(".side-panel");
-                }
-                else {
-                    $(".side-panel").empty();
-                }
-                */
+
                 $(this).blur();
             });
 
-            client = new SysMonClient($("body"));
+            client = new SysMonClient();
             client.sources.push({ name: "source1", url: "http://localhost:8080/sys" });
             client.sources.push({ name: "source2", url: "http://localhost:8080/sys" });
             client.start();
+
+            view = new SysMonView($(".column-container"));
+
+            $(client).on("update", function (e, data) {
+                if (!view.isViewReady()) {
+                    view.initializeView(data);
+                }
+
+                view.update(data);
+            });
         });
     </script>
 </head>
@@ -213,16 +215,13 @@
             <li id="confSources" class="nav-item">
                 <a href="javascript:void(0)">
                     <div class="nav-icon">&#x2756;</div>
-                    <div class="flyout">Configure sources</div>
+                    <div class="label">Configure sources</div>
                 </a>
-                <div class="contents">
-                    <input type="text" /><input type="text" class="dark" />
-                </div>
             </li>
             <li id="settings" class="nav-item">
                 <a href="javascript:void(0)">
                     <div class="nav-icon">&#x2756;</div>
-                    <div class="flyout">Settings</div>
+                    <div class="label">Settings</div>
                 </a>
             </li>
         </ul>
