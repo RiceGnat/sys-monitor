@@ -22,11 +22,11 @@ function SysMonView(container) {
     function $createCard(source, type, index) {
         var $card = $("<div>", {
             "id": generateId(source, type, index),
-            "class": "card " + type,
+            "class": "card noselect " + type,
             "data-source": source
         });
         $("<div>", { "class": "label" }).appendTo($card);
-        var $values = $("<div>", { "class": "flexbox" }).appendTo($card);
+        var $values = $("<div>", { "class": "value-container" }).appendTo($card);
         $("<div>", { "class": "left value" }).appendTo($values);
         $("<div>", { "class": "right value" }).appendTo($values);
         return $card;

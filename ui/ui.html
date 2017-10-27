@@ -3,157 +3,12 @@
 <html lang="en" xmlns="http://www.w3.org/1999/xhtml">
 <head>
     <meta charset="utf-8" />
+    <title></title>
     <link rel="stylesheet" href="http://ricegnat.com/resources/modern/modern.css" />
     <link rel="stylesheet" href="http://ricegnat.com/resources/modern/modern.dark.css" />
-    <title></title>
-    <style>
-        html, body {
-            margin: 0;
-            padding: 0;
-            height: 100%;
-            display: flex;
-            flex-direction: row;
-        }
-
-        /*** Sidebar styling ***/
-        #sidebar {
-            flex: 0 0 50px;
-            display: flex;
-            flex-direction: row;
-            align-items: flex-start;
-        }
-
-        ul.nav {
-            margin: 0;
-            padding: 0;
-            list-style: none;
-        }
-
-        .nav {
-            width: 50px;
-            overflow: hidden;
-            transition: width linear 200ms;
-        }
-
-
-            #sidebar:not(.collapsed) .nav,
-            .nav:hover {
-                width: 251px;
-            }
-
-        .nav-item {
-            width: 50px;
-            position: relative;
-            height: 50px;
-            vertical-align: middle;
-        }
-
-            .nav-item .contents {
-                display: none;
-            }
-
-        .nav-icon {
-            width: 100%;
-            height: 100%;
-            font-size: 200%;
-            text-align: center;
-            line-height: 50px;
-        }
-
-        .nav-item .label {
-            position: absolute;
-            top: 0;
-            left: 50px;
-            bottom: 0;
-            width: 200px;
-            font-size: 150%;
-            line-height: 50px;
-            white-space: nowrap;
-        }
-
-        .modern .dark .nav-item.open a {
-            color: #ffffff;
-        }
-
-        .side-panel {
-            flex: 1;
-            width: 402px;
-            padding: 20px 0;
-            transition: width linear 200ms;
-        }
-
-            .side-panel .contents {
-                white-space: nowrap;
-            }
-
-        #sidebar.collapsed .side-panel {
-            width: 0;
-        }
-
-        /*** Columns area styling ***/
-        #main {
-            display: flex;
-            flex: 1;
-        }
-
-        .column {
-            width: 200px;
-            height: 100%;
-            flex: 1;
-            background: #d0d0d0;
-            border-style: solid;
-            border-color: #bbbbbb;
-            border-width: 0 1px 0 0;
-        }
-
-        .stack {
-            padding-bottom: 4px;
-        }
-
-        .card {
-            padding: 5px 5px;
-            background: #ffffff;
-        }
-
-            .card .label {
-                white-space: nowrap;
-                overflow: hidden;
-                text-overflow: ellipsis;
-                -webkit-user-select: none;
-                user-select: none;
-            }
-
-            .card .value {
-                font-size: 150%;
-                font-weight: 300;
-                text-align: right;
-                white-space: nowrap;
-                -webkit-user-select: none;
-                user-select: none;
-            }
-
-            .card.sub {
-                padding-top: 0;
-            }
-
-                .card.sub .label {
-                    display: none;
-                }
-
-        .flexbox {
-            display: flex;
-            flex-direction: row;
-            width: 100%;
-        }
-
-            .flexbox > * {
-                flex: 1;
-            }
-
-        .value.left {
-            text-align: left;
-        }
-    </style>
+    <link rel="stylesheet" href="http://ricegnat.com/resources/modern/ui.css" />
+    <link rel="stylesheet" href="http://ricegnat.com/resources/modern/view.css" />
+    <link rel="stylesheet" href="http://ricegnat.com/resources/modern/sidebar.css" />
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
     <script src="client.js"></script>
     <script src="view.js"></script>
@@ -197,7 +52,7 @@
             client.sources.push({ name: "source2", url: "http://localhost:8080/sys" });
             client.start();
 
-            view = new SysMonView($(".column-container"));
+            view = new SysMonView($("#view"));
 
             $(client).on("update", function (e, data) {
                 if (!view.isViewReady()) {
@@ -228,6 +83,6 @@
         <div class="side-panel">
         </div>
     </div>
-    <div id="main" class="column-container"></div>
+    <div id="view"></div>
 </body>
 </html>

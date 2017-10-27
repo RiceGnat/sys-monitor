@@ -1,0 +1,50 @@
+#main {
+  display: flex;
+  flex: 1;
+}
+#main .column {
+  width: 200px;
+  height: 100%;
+  flex: 1;
+  background: #d0d0d0;
+  border-style: solid;
+  border-color: #bbbbbb;
+  border-width: 0 1px 0 0;
+}
+#main .stack {
+  padding-bottom: 4px;
+}
+#main .card {
+  padding: 5px 5px;
+  background: #ffffff;
+}
+#main .card .label {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+#main .card .value {
+  font-size: 150%;
+  font-weight: 300;
+  white-space: nowrap;
+}
+#main .card .value-container {
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+}
+#main .card .value-container > .value {
+  flex: 1;
+}
+#main .card .value-container .value.left {
+  text-align: left;
+}
+#main .card .value-container .value.right {
+  text-align: right;
+}
+#main .card.sub {
+  padding-top: 0;
+}
+#main .card.sub .label {
+  display: none;
+}

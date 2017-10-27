@@ -1,0 +1,61 @@
+﻿#view {
+    display: flex;
+    flex: 1;
+
+    .column {
+        width: 200px;
+        height: 100%;
+        flex: 1;
+        background: #d0d0d0;
+        border-style: solid;
+        border-color: #bbbbbb;
+        border-width: 0 1px 0 0;
+    }
+
+    .stack {
+        padding-bottom: 4px;
+    }
+
+    .card {
+        padding: 5px 5px;
+        background: #ffffff;
+
+        .label {
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .value {
+            font-size: 150%;
+            font-weight: 300;
+            white-space: nowrap;
+        }
+
+        .value-container {
+            display: flex;
+            flex-direction: row;
+            width: 100%;
+
+            & > .value {
+                flex: 1;
+            }
+
+            .value.left {
+                text-align: left;
+            }
+
+            .value.right {
+                text-align: right;
+            }
+        }
+
+        &.sub {
+            padding-top: 0;
+        }
+
+        &.sub .label {
+            display: none;
+        }
+    }
+}
