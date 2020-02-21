@@ -8,23 +8,26 @@ const get = () => new Promise((resolve, reject) => {
             return reject(error);
         }
 
-        var out = [];
-        var data = stdout.trim().replace(/\r/g, "").split("\n\n");
-        data.forEach((element) => {
-            var properties = element.trim().split("\n");
+        resolve(stdout.trim().replace(/\r/g, "").split("\n\n").map(token => {
+            var properties = token.trim().split("\n");
             var disk = {};
-            properties.forEach((element) => {
-                var pair = element.trim().split("=");
+            properties.forEach(token => {
+                var pair = token.trim().split("=");
                 var name = pair[0];
                 name = name.charAt(0).toLowerCase() + name.slice(1);
                 var value = pair[1];
 
                 disk[name] = value;
             });
-            out.push(disk);
-        });
-
-        return resolve(out);
+            return disk;
+        }).map(({ name, freeSpace, size, volumeName }) => ({
+            name,
+            label: volumeName,
+            used: size - freeSpace,
+            free: parseInt(freeSpace),
+            size: parseInt(size),
+            usage: Math.trunc((size - freeSpace) / size * 100)
+        })));
     });
 });
 

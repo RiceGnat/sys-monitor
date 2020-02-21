@@ -15,7 +15,7 @@ const initialize = () => {
 }
 
 const getUsage = () => {
-    let average = 0;
+    let overall = 0;
 
     const cpus = os.cpus().map((cpu, i) => {
         const current = mapTimes(cpu);
@@ -25,7 +25,7 @@ const getUsage = () => {
         };
 
         const usage = Math.trunc(diff.used / (diff.used + diff.idle) * 100);
-        average += usage;
+        overall += usage;
 
         last[i] = current;
 
@@ -36,9 +36,9 @@ const getUsage = () => {
         }
     });
 
-    average = Math.trunc(average / cpus.length);
+    overall = Math.trunc(overall / cpus.length);
 
-    return { average, cpus };
+    return { overall, cpus };
 }
 
 const poll = () => {

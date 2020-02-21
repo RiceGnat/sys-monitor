@@ -2,9 +2,9 @@ const os = require("os");
 // const speedfan = require("sensor");
 const cpu = require("./cpu");
 const memory = require("./memory");
-const disks = require("./disks");
+const disk = require("./disks");
 
-const modules = { cpu, memory, disks };
+const modules = { cpu, memory, disk };
 
 const initialize = function () {
     cpu.start();
