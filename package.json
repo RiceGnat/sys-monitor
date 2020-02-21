@@ -9,6 +9,6 @@
     "url": "https://github.com/RiceGnat/sys-monitor"
   },
   "dependencies": {
-    "sensor": "github:RiceGnat/node-sensors"
+    "express": "^4.17.1"
   }
 }

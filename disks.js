@@ -2,11 +2,10 @@ const exec = require("child_process").exec;
 
 const cmd = "wmic logicaldisk where drivetype=3 get name,freespace,size,volumename /format:list";
 
-const getAll = function (callback) {
+const get = () => new Promise((resolve, reject) => {
     exec(cmd, (error, stdout, stderr) => {
         if (error) {
-            if (typeof callback === "function") callback(error);
-            return;
+            return reject(error);
         }
 
         var out = [];
@@ -25,10 +24,8 @@ const getAll = function (callback) {
             out.push(disk);
         });
 
-        if (typeof callback === "function") callback(null, out);
+        return resolve(out);
     });
-}
+});
 
-module.exports = {
-    getAll: getAll
-};
+module.exports = { get };
