@@ -1,6 +1,6 @@
 import React from 'react';
 import SensorView from './components/SensorView';
-import './App.css';
+import './App.scss';
 
 function App() {
   return (
