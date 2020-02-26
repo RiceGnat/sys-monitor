@@ -1,16 +1,14 @@
-import React from 'react';
+import React, { Fragment } from 'react';
 import SensorView from './components/SensorView';
 import './App.scss';
 
 function App() {
   return (
-    <div>
+    <Fragment>
       <div id="sidebar" className="dark collapsed">
       </div>
-      <div id="view">
-        <SensorView endpoints={["http://localhost:8080/sys"]} />
-      </div>
-    </div>
+      <SensorView endpoints={["http://localhost:8080/sys"]} />
+    </Fragment>
   );
 }
 

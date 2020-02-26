@@ -1,4 +1,59 @@
+#root {
+    font-size: 14px;
+    display: flex;
+    flex-direction: row;
+}
+
+#view {
+    display: flex;
+    flex-direction: row;
+
+    flex: 1;
+
+    * {
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+}
+
+.column {
+    display: flex;
+    flex-direction: column;
+
+    width: 14rem;
+
+    header {
+        padding: 0 0.5em;
+    }
+}
+
 .card-container {
     display: flex;
     flex-direction: column;
+
+    flex: 1;
+    margin: -0.25em 0;
+}
+
+.card {
+    padding: 0.25em 0.5em;
+
+    .info {
+        padding: 0.75em 1em 1.5em;
+
+        table {
+            width: 100%;
+            table-layout: fixed;
+            border-collapse: collapse;
+        }
+        td {
+            vertical-align: baseline;
+            padding: 0;
+    
+            &:last-of-type:not(:first-of-type) {
+                text-align: right;
+            }
+        }
+    }
 }
