@@ -23,12 +23,12 @@ export default class extends Component {
     fetch = async (generateDefaultLayout) => {
         try {
             const layout = [];
-            const data = (await Promise.all(this.props.endpoints.map(async endpoint => {
+            const data = (await Promise.all(this.props.endpoints.map(async (endpoint, index) => {
                 const { data } = await axios.get(endpoint);
                 const items = Object.keys(data).reduce((items, key) => {
                     return items.concat((Array.isArray(data[key]) ? data[key] : [data[key]]).map((item, i) => ({
                         type: key,
-                        hash: btoa(`${endpoint}/${key}/${i}`),
+                        hash: btoa(`${index}:${endpoint}/${key}/${i}`),
                         data: item
                     })));
                 }, []);
@@ -81,7 +81,7 @@ export default class extends Component {
         <div id="view">
             {this.state.layout.map(({label, items}, i) => 
                 <CardContainer
-                    key={btoa(label)}
+                    key={`column${i}`}
                     label={label}
                     data={items.map(hash => this.state.data[hash])}
                     index={i}
@@ -89,22 +89,9 @@ export default class extends Component {
                     onCardMove={this.moveCard}
                 />
             )}
-            <div style={{ flex: 1 }}
-                onDragOver={e => {
-                    e.preventDefault();
-                    e.dataTransfer.dropEffect = 'move';
-                }}
-                onDrop={e => {
-                    e.preventDefault();
-                    const dragging = e.dataTransfer.getData('dragging');
-                    if (dragging === 'card') {
-                        const to = { column: this.state.layout.length, offset: 0 };
-                        this.moveCard(e.dataTransfer.getData('hash'), JSON.parse(e.dataTransfer.getData('position')), to);
-                    }
-                    else if (dragging === 'column') {
-                        this.moveColumn(JSON.parse(e.dataTransfer.getData('position')), this.state.layout.length)
-                    }
-                }}
-            ></div>
+            <CardContainer gutter
+                index={this.state.layout.length}
+                onMove={this.moveColumn}
+                onCardMove={this.moveCard} />
         </div>
 }

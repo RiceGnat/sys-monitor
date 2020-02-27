@@ -1,27 +1,31 @@
 import React from "react";
 
-export default ({ type: Type, data, hash, position, onMove, onDelete }) => 
-<div className="card"
+export default ({ gutter, type: Type, data, hash, position, onMove, onDelete }) => 
+<div className={gutter ? 'gutter' : 'card'}
     onDragOver={e => {
-        e.preventDefault();
-        e.stopPropagation();
-        e.dataTransfer.dropEffect = 'move';
+        if (e.dataTransfer.types.includes('card')) {
+            e.preventDefault();
+            e.stopPropagation();
+            e.dataTransfer.dropEffect = 'move';
+        }
     }}
     onDrop={e => {
-        e.preventDefault();
-        if (e.dataTransfer.getData('dragging') === 'card') {
+        if (e.dataTransfer.types.includes('card')) {
+            e.preventDefault();
             e.stopPropagation();
-            onMove(e.dataTransfer.getData('hash'), JSON.parse(e.dataTransfer.getData('position')), position);
+            const card = JSON.parse(e.dataTransfer.getData('card'));
+            onMove(card.hash, card.position, position);
         }
     }}
 >
-    <div className="info dark" draggable="true"
-        onDragStart={e => {
-            e.stopPropagation();
-            e.dataTransfer.setData('dragging', 'card');
-            e.dataTransfer.setData('hash', hash);
-            e.dataTransfer.setData('position', JSON.stringify(position));
-        }}>
-        <Type data={data} />
-    </div>
+    {!gutter &&
+        <div className="info dark" draggable="true"
+            onDragStart={e => {
+                e.stopPropagation();
+                e.dataTransfer.effectAllowed = 'move';
+                e.dataTransfer.setData('card', JSON.stringify({ hash, position }));
+            }}>
+            <Type data={data} />
+        </div>
+    }
 </div>

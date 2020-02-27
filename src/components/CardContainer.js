@@ -1,4 +1,4 @@
-import React from "react";
+import React, { Fragment } from "react";
 import Card from "./Card";
 import CpuInfo from "./CpuInfo";
 import MemInfo from "./MemInfo";
@@ -10,48 +10,53 @@ const tileTypeMap = {
     disk: DiskInfo
 };
 
-export default ({ label, data, index, onMove, onCardMove, onCardDelete }) => 
-<div className="column" draggable="true"
+export default ({ gutter, label, data, index, onMove, onCardMove, onCardDelete }) => 
+<div className={gutter ? 'gutter' : 'column'} draggable={!gutter}
     onDragOver={e => {
-        e.preventDefault();
-        e.dataTransfer.dropEffect = 'move';
+        if (e.dataTransfer.types.includes('column') ||
+            (gutter && e.dataTransfer.types.includes('card'))) {
+            e.preventDefault();
+            e.stopPropagation();
+            e.dataTransfer.dropEffect = 'move';
+        }
     }}
     onDrop={e => {
-        e.preventDefault();
-        if (e.dataTransfer.getData('dragging') === 'column') {
-            onMove(JSON.parse(e.dataTransfer.getData('position')), index);
+        if (e.dataTransfer.types.includes('column')) {
+            e.preventDefault();
+            e.stopPropagation();
+            const column = JSON.parse(e.dataTransfer.getData('column'));
+            onMove(column.position, index);
+        }
+        else if (e.dataTransfer.types.includes('card')) {
+            e.preventDefault();
+            e.stopPropagation();
+            const card = JSON.parse(e.dataTransfer.getData('card'));
+            onCardMove(card.hash, card.position, { column: index, offset: 0 });
         }
     }}
     onDragStart={e => {
         e.stopPropagation();
-        e.dataTransfer.setData('dragging', 'column');
-        e.dataTransfer.setData('position', index);
+        e.dataTransfer.effectAllowed = 'move';
+        e.dataTransfer.setData('column', JSON.stringify({ position: index }));
     }}>
-    <header>
-        <h4>{label}</h4>
-    </header>
-    <div className="card-container">
-        {data.map((item, i) => <Card
-            key={item.hash}
-            type={tileTypeMap[item.type]}
-            data={item.data}
-            position={{ column: index, offset: i}}
-            hash={item.hash}
-            onMove={(hash, from, to) => onCardMove(hash, from, to)}
-        />)}
-        <div style={{ flex: 1 }}
-            onDragOver={e => {
-                e.preventDefault();
-                e.dataTransfer.dropEffect = 'move';
-            }}
-            onDrop={e => {
-                e.preventDefault();
-                if (e.dataTransfer.getData('dragging') === 'card') {
-                    e.stopPropagation();
-                    const to = { column: index, offset: data.length };
-                    onCardMove(e.dataTransfer.getData('hash'), JSON.parse(e.dataTransfer.getData('position')), to);
-                }
-            }}
-        ></div>
-    </div>
+    {!gutter &&
+        <Fragment>
+            <header>
+                <h4>{label}</h4>
+            </header>
+            <div className="card-container">
+                {data.map((item, i) => <Card
+                    key={item.hash}
+                    type={tileTypeMap[item.type]}
+                    data={item.data}
+                    position={{ column: index, offset: i}}
+                    hash={item.hash}
+                    onMove={(hash, from, to) => onCardMove(hash, from, to)}
+                />)}
+                <Card gutter
+                    position={{ column: index, offset: data.length }}
+                    onMove={(hash, from, to) => onCardMove(hash, from, to)} />
+            </div>
+        </Fragment>
+    }
 </div>
