@@ -22,44 +22,41 @@ export default class extends Component {
     }
 
     updateLayout = (layout, others) => {
-    this.setState(others ? { layout } : { layout, ...others });
+        this.setState(others ? { layout, ...others } : { layout });
     }
 
-    fetch = async (generateDefaultLayout) => {
-        try {
-            const layout = [];
-            const data = (await Promise.all(this.props.endpoints.map(async (endpoint, index) => {
-                const { data } = await axios.get(endpoint);
+    fetch = async () => {
+        const newColumns = [];
+        const data = (await Promise.all(this.props.sources.map(async ({ url, initialized }, index) => {
+            try {
+                const { data } = await axios.get(url);
                 const items = Object.keys(data).reduce((items, key) => {
                     return items.concat((Array.isArray(data[key]) ? data[key] : [data[key]]).map((item, i) => ({
                         type: key,
-                        hash: btoa(`${index}:${endpoint}/${key}/${i}`),
+                        hash: btoa(`${url}/${key}/${i}`),
                         data: item
                     })));
                 }, []);
-                if (generateDefaultLayout) {
-                    layout.push({
-                        label: endpoint.replace(/https?:\/\//, ''),
+                if (!initialized) {
+                    newColumns.push({
+                        label: url.replace(/https?:\/\//, ''),
                         items: items.map(({ hash }) => hash)
                     });
+                    this.props.onSourceInitialized(index);
                 }
                 return items;
-            }))).reduce((items, current) => items.concat(current), [])
-            .reduce((data, current) => {
-                data[current.hash] = current;
-                return data;
-            }, {});
+            }
+            catch {
+                return [];
+            }
+        }))).reduce((items, current) => items.concat(current), [])
+        .reduce((data, current) => {
+            data[current.hash] = current;
+            return data;
+        }, {});
 
-            if (generateDefaultLayout) {
-                this.updateLayout(layout, { data });
-            }
-            else {
-                this.setState({ data });
-            }
-        }
-        finally {
-            setTimeout(() => this.fetch(false), 1000);
-        }
+        this.updateLayout(this.state.layout.concat(newColumns), { data });
+        setTimeout(() => this.fetch(false), 1000);
     }
 
     moveColumn = (from, to) => {
