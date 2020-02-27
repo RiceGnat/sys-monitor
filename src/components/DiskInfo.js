@@ -1,9 +1,13 @@
 import React, { Fragment } from "react";
+import EditableText from "./EditableText";
 import { geebees } from "../util";
 
-export default ({ data }) =>
+export default ({ data, overrides, onEdit }) =>
 <Fragment>
-    <h5>{data.name} ({data.label})</h5>
+    <EditableText className="h5"
+        defaultValue={`${data.name} (${data.label})`}
+        value={overrides.name}
+        onChange={value => onEdit('name', value)} />
     <table className="h6">
         <tbody>
             <tr>

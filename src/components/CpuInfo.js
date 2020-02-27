@@ -1,9 +1,13 @@
 import React, { Fragment } from "react";
+import EditableText from "./EditableText";
 import { geebees } from "../util";
 
-export default ({ data }) =>
+export default ({ data, overrides, onEdit }) =>
 <Fragment>
-    <h5>{data.cpus[0].name}</h5>
+    <EditableText className="h5"
+        defaultValue={data.cpus[0].name}
+        value={overrides.name}
+        onChange={value => onEdit('name', value)} />
     <table>
         <tbody>
             {data.cpus.map((cpu, i) =>

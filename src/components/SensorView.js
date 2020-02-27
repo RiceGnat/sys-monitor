@@ -7,8 +7,9 @@ export default class extends Component {
         super(props);
 
         this.state = {
-            data: [],
-            layout: []
+            data: {},
+            layout: [],
+            userOverrides: {}
         };
     }
 
@@ -18,6 +19,10 @@ export default class extends Component {
 
     loadLayout = () => {
         
+    }
+
+    updateLayout = (layout, others) => {
+    this.setState(others ? { layout } : { layout, ...others });
     }
 
     fetch = async (generateDefaultLayout) => {
@@ -34,26 +39,47 @@ export default class extends Component {
                 }, []);
                 if (generateDefaultLayout) {
                     layout.push({
-                        label: endpoint,
+                        label: endpoint.replace(/https?:\/\//, ''),
                         items: items.map(({ hash }) => hash)
                     });
                 }
                 return items;
             }))).reduce((items, current) => items.concat(current), [])
-            .reduce((items, current) => {
-                items[current.hash] = current;
-                return items;
+            .reduce((data, current) => {
+                data[current.hash] = current;
+                return data;
             }, {});
 
-            const newState = { data };
             if (generateDefaultLayout) {
-                newState.layout = layout;
+                this.updateLayout(layout, { data });
             }
-            this.setState(newState);
+            else {
+                this.setState({ data });
+            }
         }
         finally {
             setTimeout(() => this.fetch(false), 1000);
         }
+    }
+
+    moveColumn = (from, to) => {
+        const layout = this.state.layout;
+        const column = layout[from];
+        layout.splice(from, 1);
+        layout.splice(to, 0, column);
+        this.updateLayout(layout);
+    }
+
+    editColumn = (index, key, value) => {
+        const layout = this.state.layout;
+        layout[index][key] = value;
+        this.updateLayout(layout);
+    }
+
+    deleteColumn = index => {
+        const layout = this.state.layout;
+        layout.splice(index, 1);
+        this.updateLayout(layout);
     }
 
     moveCard = (hash, from, to) => {
@@ -66,15 +92,22 @@ export default class extends Component {
             };
         }
         layout[to.column].items.splice(to.offset, 0, hash);
-        this.setState({ layout });
+        this.updateLayout(layout);
     }
 
-    moveColumn = (from, to) => {
+    editCard = (hash, key, value) => {
+        const userOverrides = this.state.userOverrides;
+        if (!userOverrides[hash]) {
+            userOverrides[hash] = {};
+        }
+        userOverrides[hash][key] = value;
+        this.setState({ userOverrides });
+    }
+
+    deleteCard = position => {
         const layout = this.state.layout;
-        const column = layout[from];
-        layout.splice(from, 1);
-        layout.splice(to, 0, column);
-        this.setState({ layout });
+        layout[position.column].items.splice(position.offset, 1);
+        this.updateLayout(layout);
     }
 
     render = () => 
@@ -83,10 +116,18 @@ export default class extends Component {
                 <CardContainer
                     key={`column${i}`}
                     label={label}
-                    data={items.map(hash => this.state.data[hash])}
+                    data={items.filter(hash => this.state.data[hash])
+                        .map(hash => ({
+                            ...this.state.data[hash],
+                            userOverrides: this.state.userOverrides[hash] || {}
+                        }))}
                     index={i}
                     onMove={this.moveColumn}
+                    onEdit={this.editColumn}
+                    onDelete={this.deleteColumn}
                     onCardMove={this.moveCard}
+                    onCardEdit={this.editCard}
+                    onCardDelete={this.deleteCard}
                 />
             )}
             <CardContainer gutter

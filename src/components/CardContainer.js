@@ -3,6 +3,8 @@ import Card from "./Card";
 import CpuInfo from "./CpuInfo";
 import MemInfo from "./MemInfo";
 import DiskInfo from "./DiskInfo";
+import EditableText from "./EditableText";
+import DeleteButton from "./DeleteButton";
 
 const tileTypeMap = {
     cpu: CpuInfo,
@@ -10,7 +12,7 @@ const tileTypeMap = {
     disk: DiskInfo
 };
 
-export default ({ gutter, label, data, index, onMove, onCardMove, onCardDelete }) => 
+export default ({ gutter, label, data, index, onMove, onEdit, onDelete, onCardMove, onCardEdit, onCardDelete }) => 
 <div className={gutter ? 'gutter' : 'column'} draggable={!gutter}
     onDragOver={e => {
         if (e.dataTransfer.types.includes('column') ||
@@ -42,16 +44,20 @@ export default ({ gutter, label, data, index, onMove, onCardMove, onCardDelete }
     {!gutter &&
         <Fragment>
             <header>
-                <h4>{label}</h4>
+                <EditableText className="h4" value={label} onChange={value => onEdit(index, 'label', value)} />
+                <DeleteButton onClick={() => onDelete(index)} />
             </header>
             <div className="card-container">
                 {data.map((item, i) => <Card
-                    key={item.hash}
+                    key={btoa(`${index}:${i}:${item.hash}`)}
                     type={tileTypeMap[item.type]}
                     data={item.data}
+                    overrides={item.userOverrides}
                     position={{ column: index, offset: i}}
                     hash={item.hash}
                     onMove={(hash, from, to) => onCardMove(hash, from, to)}
+                    onEdit={(hash, key, value) => onCardEdit(hash, key, value)}
+                    onDelete={position => onCardDelete(position)}
                 />)}
                 <Card gutter
                     position={{ column: index, offset: data.length }}

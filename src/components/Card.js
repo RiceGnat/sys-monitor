@@ -1,6 +1,7 @@
 import React from "react";
+import DeleteButton from "./DeleteButton";
 
-export default ({ gutter, type: Type, data, hash, position, onMove, onDelete }) => 
+export default ({ gutter, type: Type, data, overrides, hash, position, onMove, onEdit, onDelete }) => 
 <div className={gutter ? 'gutter' : 'card'}
     onDragOver={e => {
         if (e.dataTransfer.types.includes('card')) {
@@ -22,10 +23,11 @@ export default ({ gutter, type: Type, data, hash, position, onMove, onDelete }) 
         <div className="info dark" draggable="true"
             onDragStart={e => {
                 e.stopPropagation();
-                e.dataTransfer.effectAllowed = 'move';
+                e.dataTransfer.effectAllowed = 'copyMove';
                 e.dataTransfer.setData('card', JSON.stringify({ hash, position }));
             }}>
-            <Type data={data} />
+            <Type data={data} overrides={overrides} onEdit={(key, value) => onEdit(hash, key, value)} />
+            <DeleteButton onClick={() => onDelete(position)} />
         </div>
     }
 </div>

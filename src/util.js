@@ -15,3 +15,9 @@ export const geebees = (bytes, {
     }
     return `${b.toFixed(d)} ${gb[n + offset]}${u}`;
 }
+
+export const cardDrag = (e, callback) => {
+    if (e.dataTransfer.types.includes('card')) {
+        
+    }
+}
