@@ -2,6 +2,7 @@
     font-size: 14px;
     display: flex;
     flex-direction: row;
+    overflow: hidden;
 }
 
 #view {
@@ -18,27 +19,68 @@
 }
 
 #sidebar {
-    display: flex;
-    flex-direction: row;
-
-    width: 20em;
-    transition: width ease-out 200ms;
-    overflow: hidden;
     position: relative;
+    width: 1.5em;
 
-    &.collapsed {
-        width: 1.5em;
+    fieldset {
+        margin-bottom: 2em;
     }
 
     .expand-button {
-        display: block;
-        padding: 0 0.25em;
-        font-size: 2em;
+        position: absolute;
+        margin: 0;
+        width: 100%;
+        height: 100%;
+        padding: 0;
+        transition-property: background-color;
+
+        &:not(:hover):not(:active):not(:focus) {
+            background: var(--primary);
+        }
+
+        & > span {
+            display: block;
+            position: absolute;
+            top: 0.35em;
+            width: 100%;
+            height: 0.5em;
+            font-size: 3em;
+            line-height: 0.5em;
+        }
+
+        &:active {
+            transform: none;
+
+            & > span {
+                transform: translateX(10%);
+                transition: transform linear 50ms;
+            }
+        }
     }
 
     .panel {
+        position: absolute;
+        top: 0;
+        left: 1.5em;
+        box-sizing: border-box;
+        width: 20em;
+        height: 100%;
         padding: 0.75em 1em;
-        flex: 1 0 16em;
+        background-color: var(--primary);
+    }
+
+    &.collapsed {
+        .expand-button {
+            transform: scaleX(-1);
+        }
+
+        .panel {
+            transform: translateX(-20em);
+        }
+    }
+
+    &:not(.collapsed) + #view {
+        transform: translateX(20em);
     }
 }
 
@@ -52,37 +94,29 @@ input[type=text].invisible {
     }
 }
 
-a.button {
-    text-decoration: none;
-
-    &:enabled:focus {
-        outline: 0;
-    }
-}
-
-.delete-button {
-    display: block;
-    position: absolute;
-    top: 1px;
-    right: 0.25em;
-    margin: 0;
-    border: 0;
-    width: 1em;
-    height: 1em;
-    line-height: 1em;
-    padding: 0;
+.delete-button > span {
+    position: relative;
     font-size: 2em;
-    text-align: center;
-
-    &:focus {
-        opacity: 1;
-    }
+    line-height: 0;
+    top: 0.1em;
 }
 
 .column header,
 .card .info {
     .delete-button {
+        position: absolute;
+        top: 0.1em;;
+        right: 0;
+        margin: 0;
+        width: 2em;
+        height: 2em;
+        padding: 0 0 0.25em;
+
         opacity: 0;
+    
+        &:focus {
+            opacity: 1;
+        }
     }
 
     &:hover {

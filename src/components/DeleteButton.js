@@ -1,8 +1,10 @@
 import React from "react";
 
 export default ({ onClick }) =>
-// eslint-disable-next-line
-<a className="button delete-button" href="#" onClick={e => {
-    e.preventDefault();
-    onClick(e);
-}}>×</a>
+<button type="button" className="link-button delete-button no-outline"
+    onClick={e => {
+        e.preventDefault();
+        onClick(e);
+    }}>
+    <span>&times;</span>
+</button>

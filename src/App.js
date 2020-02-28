@@ -32,6 +32,6 @@ export default class extends Component {
   render = () =>
   <Fragment>
     <Sidebar config={this.state} onConfigChange={this.updateConfig} />
-    <SensorView sources={this.state.sources.filter(({ url }) => url)} onSourceInitialized={this.initializeSource} />
+    <SensorView sources={this.state.sources.filter(({ url }) => url)} onSourceInitialized={this.initializeSource} updateInterval={this.state.updateInterval} />
   </Fragment>
 }

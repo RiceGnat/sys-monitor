@@ -56,7 +56,7 @@ export default class extends Component {
         }, {});
 
         this.updateLayout(this.state.layout.concat(newColumns), { data });
-        setTimeout(() => this.fetch(false), 1000);
+        setTimeout(() => this.fetch(false), this.props.updateInterval);
     }
 
     moveColumn = (from, to) => {
