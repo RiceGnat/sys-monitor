@@ -44,7 +44,7 @@ export default class extends Component {
                 <legend>View</legend>
                 Update interval
                 &nbsp;
-                <select onChange={e => this.props.onConfigChange('interval', e.target.value)}>
+                <select onChange={e => this.props.onConfigChange('updateInterval', e.target.value)}>
                     <option value={100}>100 ms</option>
                     <option value={500}>500 ms</option>
                     <option value={1000}>1 second</option>
