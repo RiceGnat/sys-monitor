@@ -29,14 +29,12 @@ export default class extends Component {
         const newColumns = [];
         const data = (await Promise.all(this.props.sources.map(async ({ url, initialized }, index) => {
             try {
-                const { data } = await axios.get(url);
-                const items = Object.keys(data).reduce((items, key) => {
-                    return items.concat((Array.isArray(data[key]) ? data[key] : [data[key]]).map((item, i) => ({
-                        type: key,
-                        hash: btoa(`${url}/${key}/${i}`),
-                        data: item
-                    })));
-                }, []);
+                const { data: response } = await axios.get(url);
+                const items = response.map(({ type, data }, i) => ({
+                    type,
+                    hash: btoa(`${url}/${i}`),
+                    data
+                }));
                 if (!initialized) {
                     newColumns.push({
                         label: url.replace(/https?:\/\//, ''),
