@@ -13,13 +13,13 @@ const initialize = function () {
 const get = async () => {
     const keys = Object.keys(modules);
     const results = await Promise.all(keys.map(key => modules[key].get()));
-    const out = {};
 
-    results.forEach((current, i) => {
-        out[keys[i]] = current;
-    });
-
-    return out;
+    return results.reduce((out, current, i) => {
+        return out.concat((Array.isArray(current) ? current : [current]).map(item => ({
+            type: keys[i],
+            data: item
+        })))
+    }, []);
 }
 
 module.exports = {

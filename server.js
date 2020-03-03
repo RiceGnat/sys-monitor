@@ -1,6 +1,6 @@
 const express = require("express");
 const cors = require("cors");
-const sys = require("./sys-monitor.js");
+const sys = require("./service/sys-monitor.js");
 const port = process.env.PORT || 8080;
 
 sys.initialize();
