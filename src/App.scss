@@ -82,6 +82,19 @@
     &:not(.collapsed) + #view {
         transform: translateX(20em);
     }
+    
+    .source {
+        display: flex;
+        flex-direction: row;
+
+        & > input[type=text] {
+            flex: 1;
+        }
+
+        & > button {
+            margin-left: 0.25rem;
+        }
+    }
 }
 
 input[type=text].invisible {
@@ -96,9 +109,16 @@ input[type=text].invisible {
 
 .delete-button > span {
     position: relative;
-    font-size: 2em;
+    top: 0.2rem;
+    font-size: 2rem;
     line-height: 0;
-    top: 0.1em;
+}
+
+.reload-button > span {
+    position: relative;
+    font-size: 1.25em;
+    font-weight: 200;
+    line-height: 0;
 }
 
 .column header,
@@ -151,6 +171,7 @@ input[type=text].invisible {
 }
 
 .card {
+    flex-shrink: 0;
     padding: 0.25em 0.5em;
 
     .info {

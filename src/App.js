@@ -13,14 +13,21 @@ export default class extends Component {
           url: "http://localhost:8080/sys",
           initialized: false
         }
-      ]
+      ],
+      layout: [],
+      updateInterval: 1000
     }
   }
 
   updateConfig = (key, value) => {
-    const state = this.state;
-    state[key] = value;
-    this.setState(state);
+    if (typeof key === 'object') {
+      this.setState(key);
+    }
+    else {
+      const state = this.state;
+      state[key] = value;
+      this.setState(state);
+    }
   }
 
   initializeSource = index => {
@@ -32,6 +39,11 @@ export default class extends Component {
   render = () =>
   <Fragment>
     <Sidebar config={this.state} onConfigChange={this.updateConfig} />
-    <SensorView sources={this.state.sources.filter(({ url }) => url)} onSourceInitialized={this.initializeSource} updateInterval={this.state.updateInterval} />
+    <SensorView
+      sources={this.state.sources.filter(({ url }) => url)}
+      onSourceInitialized={this.initializeSource}
+      layout={this.state.layout}
+      onLayoutChanged={layout => this.updateConfig('layout', layout)}
+      updateInterval={this.state.updateInterval} />
   </Fragment>
 }

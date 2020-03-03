@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import DeleteButton from "./DeleteButton";
+import ReloadButton from "./ReloadButton";
 
 export default class extends Component {
     constructor(props) {
@@ -18,7 +19,9 @@ export default class extends Component {
 
     updateSources = (i, value) => {
         const sources = this.props.config.sources;
-        sources[i] = value;
+        if (value) sources[i] = value;
+        else sources.splice(i, 1);
+        if (sources.length === 0) sources[0] = { url: '', initialized: false };
         this.props.onConfigChange('sources', sources);
     }
 
@@ -30,21 +33,25 @@ export default class extends Component {
                 <legend>Sources</legend>
                 {
                     this.props.config.sources.map(({ url, initialized }, i) =>
-                        <div key={`sources:${i}`}>
+                        <div key={`sources:${i}`} className="source">
                             <input type="text" value={url} onChange={e => this.updateSources(i, { url: e.target.value, initialized })} />
-                            <DeleteButton />
+                            <ReloadButton onClick={() => this.updateSources(i, { url, initialized: false })} />
+                            <DeleteButton onClick={() => this.updateSources(i)} />
                         </div>
                     )
                 }
-                <input type="button" value="Add source" onClick={e => this.updateSources(this.props.config.sources.length, { url: '', initialized: false })} />
+                <input type="button" value="Add source" onClick={() => this.updateSources(this.props.config.sources.length, { url: '', initialized: false })} />
                 <br />
-                <input type="button" value="Reset layout" />
+                <input type="button" value="Reset layout" onClick={() => this.props.onConfigChange({
+                    layout: [],
+                    sources: this.props.config.sources.map(({ url }) => ({ url, initialized: false }))
+                })} />
             </fieldset>
             <fieldset>
                 <legend>View</legend>
                 Update interval
                 &nbsp;
-                <select onChange={e => this.props.onConfigChange('updateInterval', e.target.value)}>
+                <select value={this.props.config.updateInterval} onChange={e => this.props.onConfigChange('updateInterval', e.target.value)}>
                     <option value={100}>100 ms</option>
                     <option value={500}>500 ms</option>
                     <option value={1000}>1 second</option>

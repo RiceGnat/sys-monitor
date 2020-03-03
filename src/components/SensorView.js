@@ -8,7 +8,6 @@ export default class extends Component {
 
         this.state = {
             data: {},
-            layout: [],
             userOverrides: {}
         };
     }
@@ -17,12 +16,8 @@ export default class extends Component {
         await this.fetch(true);
     }
 
-    loadLayout = () => {
-        
-    }
-
-    updateLayout = (layout, others) => {
-        this.setState(others ? { layout, ...others } : { layout });
+    updateLayout = layout => {
+        this.props.onLayoutChanged(layout);
     }
 
     fetch = async () => {
@@ -53,12 +48,13 @@ export default class extends Component {
             return data;
         }, {});
 
-        this.updateLayout(this.state.layout.concat(newColumns), { data });
+        this.updateLayout(this.props.layout.concat(newColumns));
+        this.setState({ data });
         setTimeout(() => this.fetch(false), this.props.updateInterval);
     }
 
     moveColumn = (from, to) => {
-        const layout = this.state.layout;
+        const layout = this.props.layout;
         const column = layout[from];
         layout.splice(from, 1);
         layout.splice(to, 0, column);
@@ -66,19 +62,19 @@ export default class extends Component {
     }
 
     editColumn = (index, key, value) => {
-        const layout = this.state.layout;
+        const layout = this.props.layout;
         layout[index][key] = value;
         this.updateLayout(layout);
     }
 
     deleteColumn = index => {
-        const layout = this.state.layout;
+        const layout = this.props.layout;
         layout.splice(index, 1);
         this.updateLayout(layout);
     }
 
     moveCard = (hash, from, to) => {
-        const layout = this.state.layout;
+        const layout = this.props.layout;
         layout[from.column].items.splice(from.offset, 1);
         if (to.column >= layout.length) {
             layout[to.column] = {
@@ -100,14 +96,14 @@ export default class extends Component {
     }
 
     deleteCard = position => {
-        const layout = this.state.layout;
+        const layout = this.props.layout;
         layout[position.column].items.splice(position.offset, 1);
         this.updateLayout(layout);
     }
 
     render = () => 
         <div id="view">
-            {this.state.layout.map(({label, items}, i) => 
+            {this.props.layout.map(({label, items}, i) => 
                 <CardContainer
                     key={`column${i}`}
                     label={label}
@@ -126,7 +122,7 @@ export default class extends Component {
                 />
             )}
             <CardContainer gutter
-                index={this.state.layout.length}
+                index={this.props.layout.length}
                 onMove={this.moveColumn}
                 onCardMove={this.moveCard} />
         </div>
