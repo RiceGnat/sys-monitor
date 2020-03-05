@@ -6,5 +6,5 @@ export default ({ onClick }) =>
         e.preventDefault();
         onClick(e);
     }}>
-    <span>&times;</span>
+    <span role="img" aria-label="delete">&times;</span>
 </button>
