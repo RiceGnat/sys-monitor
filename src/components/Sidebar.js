@@ -58,6 +58,14 @@ export default class extends Component {
                     <option value={5000}>5 seconds</option>
                     <option value={10000}>10 seconds</option>
                 </select>
+                <br />
+                Appearance
+                &nbsp;
+                <select value={this.props.config.appearance} onChange={e => this.props.onConfigChange('appearance', e.target.value)}>
+                    <option value={0}>Light</option>
+                    <option value={2}>Dark</option>
+                    <option value={1}>Dark cards</option>
+                </select>
             </fieldset>
             <input type="reset" value="Reset to default" onClick={() => this.props.onReset()} />
         </div>

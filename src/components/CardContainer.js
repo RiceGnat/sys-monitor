@@ -12,7 +12,7 @@ const tileTypeMap = {
     disk: DiskInfo
 };
 
-export default ({ gutter, label, data, index, onMove, onEdit, onDelete, onCardMove, onCardEdit, onCardDelete }) => 
+export default ({ gutter, label, data, index, onMove, onEdit, onDelete, onCardMove, onCardEdit, onCardDelete, darkCards }) => 
 <div className={gutter ? 'gutter' : 'column'} draggable={!gutter}
     onDragOver={e => {
         if (e.dataTransfer.types.includes('column') ||
@@ -58,6 +58,7 @@ export default ({ gutter, label, data, index, onMove, onEdit, onDelete, onCardMo
                     onMove={(hash, from, to) => onCardMove(hash, from, to)}
                     onEdit={(hash, key, value) => onCardEdit(hash, key, value)}
                     onDelete={position => onCardDelete(position)}
+                    dark={darkCards}
                 />)}
                 <Card gutter
                     position={{ column: index, offset: data.length }}

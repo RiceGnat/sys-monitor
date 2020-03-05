@@ -80,7 +80,7 @@ export default class extends Component {
         layout[from.column].items.splice(from.offset, 1);
         if (to.column >= layout.length) {
             layout[to.column] = {
-                label: 'New Column',
+                label: "New Column",
                 items: []
             };
         }
@@ -104,7 +104,7 @@ export default class extends Component {
     }
 
     render = () => 
-        <div id="view">
+        <div id="view" className={this.props.darkBackground ? "dark" : ""}>
             {this.props.layout.map(({label, items}, i) => 
                 <CardContainer
                     key={`column${i}`}
@@ -121,6 +121,7 @@ export default class extends Component {
                     onCardMove={this.moveCard}
                     onCardEdit={this.editCard}
                     onCardDelete={this.deleteCard}
+                    darkCards={this.props.darkCards}
                 />
             )}
             <CardContainer gutter

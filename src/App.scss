@@ -106,18 +106,21 @@ input[type=text].invisible {
     }
 }
 
-.delete-button > span {
+.link-button > span {
+    display: inline-block;
     position: relative;
+    line-height: 0;
+    height: 0;
+}
+
+.delete-button > span {
     top: 0.2rem;
     font-size: 2rem;
-    line-height: 0;
 }
 
 .reload-button > span {
-    position: relative;
     font-size: 1.25em;
     font-weight: 200;
-    line-height: 0;
 }
 
 .column header,
@@ -154,10 +157,6 @@ input[type=text].invisible {
     header {
         position: relative;
         padding: 0 1.5em;
-    }
-
-    &:hover {
-        background-color: #dddddd;
     }
 }
 

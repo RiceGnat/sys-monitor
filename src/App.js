@@ -3,7 +3,7 @@ import SensorView from './components/SensorView';
 import Sidebar from './components/Sidebar';
 import './App.scss';
 
-const defaultState = {
+const getDefaultState = () => ({
   sources: [
     {
       url: 'http://localhost:8080/sys',
@@ -11,8 +11,9 @@ const defaultState = {
     }
   ],
   layout: [],
-  updateInterval: 1000
-};
+  updateInterval: 1000,
+  appearance: 1
+})
 
 export default class extends Component {
   constructor(props) {
@@ -27,13 +28,13 @@ export default class extends Component {
       this.setState(JSON.parse(state));
     }
     else {
-      this.setState(defaultState);
+      this.setState(getDefaultState());
     }
   }
 
   saveState = state => this.setState(state, () => localStorage.setItem('state', JSON.stringify(this.state)));
 
-  resetState = () => this.setState(defaultState, () => localStorage.removeItem('state'));
+  resetState = () => this.setState(getDefaultState(), () => { localStorage.removeItem('state'); console.log(this.state)});
 
   updateConfig = (key, value) => {
     if (typeof key === 'object') {
@@ -60,7 +61,9 @@ export default class extends Component {
       onSourceInitialized={this.initializeSource}
       layout={this.state.layout}
       onLayoutChanged={layout => this.updateConfig('layout', layout)}
-      updateInterval={this.state.updateInterval} />
+      updateInterval={this.state.updateInterval}
+      darkBackground={this.state.appearance >> 1}
+      darkCards={this.state.appearance & 1} />
   </Fragment>
   : null;
 }

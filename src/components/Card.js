@@ -1,7 +1,7 @@
 import React from "react";
 import DeleteButton from "./DeleteButton";
 
-export default ({ gutter, type: Type, data, overrides, hash, position, onMove, onEdit, onDelete }) => 
+export default ({ gutter, type: Type, data, overrides, hash, position, onMove, onEdit, onDelete, dark }) => 
 <div className={gutter ? 'gutter' : 'card'}
     onDragOver={e => {
         if (e.dataTransfer.types.includes('card')) {
@@ -20,7 +20,7 @@ export default ({ gutter, type: Type, data, overrides, hash, position, onMove, o
     }}
 >
     {!gutter &&
-        <div className="info dark" draggable="true"
+        <div className={`info${dark ? " dark" : ""}`} draggable="true"
             onDragStart={e => {
                 e.stopPropagation();
                 e.dataTransfer.effectAllowed = 'copyMove';
