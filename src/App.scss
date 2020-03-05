@@ -111,16 +111,19 @@ input[type=text].invisible {
     position: relative;
     line-height: 0;
     height: 0;
+    font-family: 'Segoe UI Symbol';
 }
 
 .delete-button > span {
     top: 0.2rem;
     font-size: 2rem;
+    font-weight: 200;
 }
 
 .reload-button > span {
     top: 0.05em;
-    font-size: 1.5em;
+    font-size: 1.75em;
+    font-weight: 200;
 }
 
 .column header,
