@@ -6,5 +6,5 @@ export default ({ onClick }) =>
         e.preventDefault();
         onClick(e);
     }}>
-    <span role="img" aria-label="reload">&#128259;</span>
+    <span role="img" aria-label="reload">&#8635;</span>
 </button>
