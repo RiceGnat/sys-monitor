@@ -59,14 +59,7 @@ export default class extends Component {
                     <option value={10000}>10 seconds</option>
                 </select>
             </fieldset>
-            <fieldset>
-                <legend>Data</legend>
-                <input type="button" value="Import" />
-                &nbsp;
-                <input type="button" value="Export" />
-                <br />
-                <input type="button" value="Clear all data" />
-            </fieldset>
+            <input type="reset" value="Reset to default" onClick={() => this.props.onReset()} />
         </div>
         <button type="button" className="expand-button no-outline"
             onClick={e => {

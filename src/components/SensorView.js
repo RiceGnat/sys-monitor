@@ -32,7 +32,7 @@ export default class extends Component {
                 }));
                 if (!initialized) {
                     newColumns.push({
-                        label: url.replace(/https?:\/\//, ''),
+                        label: url.replace(/https?:\/\//, '').split('/')[0].split(':')[0],
                         items: items.map(({ hash }) => hash)
                     });
                     this.props.onSourceInitialized(index);
@@ -48,7 +48,9 @@ export default class extends Component {
             return data;
         }, {});
 
-        this.updateLayout(this.props.layout.concat(newColumns));
+        if (newColumns.length > 0) {
+            this.updateLayout(this.props.layout.concat(newColumns));
+        }
         this.setState({ data });
         setTimeout(() => this.fetch(false), this.props.updateInterval);
     }
