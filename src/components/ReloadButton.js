@@ -6,5 +6,5 @@ export default ({ onClick }) =>
         e.preventDefault();
         onClick(e);
     }}>
-    <span>&#10132;</span>
+    <span>&#128259;</span>
 </button>
