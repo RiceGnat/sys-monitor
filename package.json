@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "description": "Get system usage info",
   "author": "RiceGnat",
-  "main": "sys-monitor.js",
+  "main": "server.js",
   "repository": {
     "type": "git",
     "url": "https://github.com/RiceGnat/sys-monitor"
@@ -24,7 +24,8 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "server": "node server.js"
   },
   "eslintConfig": {
     "extends": "react-app"
