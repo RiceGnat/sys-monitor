@@ -34,7 +34,7 @@ export default class extends Component {
 
   saveState = state => this.setState(state, () => localStorage.setItem('state', JSON.stringify(this.state)));
 
-  resetState = () => this.setState(getDefaultState(), () => { localStorage.removeItem('state'); console.log(this.state)});
+  resetState = () => this.setState(getDefaultState(), () => localStorage.removeItem('state'));
 
   updateConfig = (key, value) => {
     if (typeof key === 'object') {
