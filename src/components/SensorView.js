@@ -8,7 +8,6 @@ export default class extends Component {
 
         this.state = {
             data: {},
-            userOverrides: {}
         };
     }
 
@@ -89,12 +88,12 @@ export default class extends Component {
     }
 
     editCard = (hash, key, value) => {
-        const userOverrides = this.state.userOverrides;
+        const userOverrides = this.props.userOverrides;
         if (!userOverrides[hash]) {
             userOverrides[hash] = {};
         }
         userOverrides[hash][key] = value;
-        this.setState({ userOverrides });
+        this.props.onUserOverrideChanged(userOverrides);
     }
 
     deleteCard = position => {
@@ -112,7 +111,7 @@ export default class extends Component {
                     data={items.filter(hash => this.state.data[hash])
                         .map(hash => ({
                             ...this.state.data[hash],
-                            userOverrides: this.state.userOverrides[hash] || {}
+                            userOverrides: this.props.userOverrides[hash] || {}
                         }))}
                     index={i}
                     onMove={this.moveColumn}

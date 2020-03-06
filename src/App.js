@@ -11,6 +11,7 @@ const getDefaultState = () => ({
     }
   ],
   layout: [],
+  userOverrides: {},
   updateInterval: 1000,
   appearance: 1
 })
@@ -61,6 +62,8 @@ export default class extends Component {
       onSourceInitialized={this.initializeSource}
       layout={this.state.layout}
       onLayoutChanged={layout => this.updateConfig('layout', layout)}
+      userOverrides={this.state.userOverrides}
+      onUserOverrideChanged={userOverrides => this.updateConfig('userOverrides', userOverrides)}
       updateInterval={this.state.updateInterval}
       darkBackground={this.state.appearance >> 1}
       darkCards={this.state.appearance & 1} />
