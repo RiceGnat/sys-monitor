@@ -10,11 +10,6 @@
     flex-direction: row;
 
     flex: 1;
-
-    * {
-        white-space: nowrap;
-        text-overflow: ellipsis;
-    }
 }
 
 #sidebar {
@@ -100,6 +95,7 @@ input[type=text].invisible {
     border: 0;
     width: 100%;
     padding: 0;
+    text-overflow: ellipsis;
 
     &:focus {
         outline: 0;
@@ -182,6 +178,7 @@ input[type=text].invisible {
     .info {
         position: relative;
         padding: 0.5em 1em 1.5em;
+        white-space: nowrap;
 
         table {
             width: 100%;
