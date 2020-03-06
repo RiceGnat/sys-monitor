@@ -106,7 +106,7 @@ export default class extends Component {
         <div id="view" className={this.props.darkBackground ? "dark" : ""}>
             {this.props.layout.map(({label, items}, i) => 
                 <CardContainer
-                    key={`column${i}`}
+                    key={`${i}`}
                     label={label}
                     data={items.filter(hash => this.state.data[hash])
                         .map(hash => ({

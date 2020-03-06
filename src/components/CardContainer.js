@@ -49,7 +49,7 @@ export default ({ gutter, label, data, index, onMove, onEdit, onDelete, onCardMo
             </header>
             <div className="card-container">
                 {data.map((item, i) => <Card
-                    key={btoa(`${index}:${i}:${item.hash}`)}
+                    key={`${i}:${item.hash}`}
                     type={tileTypeMap[item.type]}
                     data={item.data}
                     overrides={item.userOverrides}
